@@ -24,5 +24,5 @@ app.use((req, res) => {
 const port = 8000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
-  //opn(`http://localhost:${port}/api`);
+  //opn(`http://localhost:${port}`);
 });
