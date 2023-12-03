@@ -7,7 +7,7 @@ router.route('/seats').get((req, res) => {
   res.json(db.seats);
 });
       
-router.route('/seats/:id')((req, res) => {
+router.route('/seats/:id').get((req, res) => {
   const seatId = parseInt(req.params.id);
   const seat = db.seats.find(item => item.id === seatId);
   res.json(seat);
