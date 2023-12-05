@@ -8,20 +8,28 @@ router.route('/testimonials').get((req, res) => {
   res.json(db.testimonials);
 });
 
-router.route('/testimonials/:id').get((req, res) => {
-  const testimonialId = parseInt(req.params.id);
-  const testimonial = db.testimonials.find(item => item.id === testimonialId);
-  res.json(testimonial);
-   
-});
 
 router.route('/testimonials/random').get((req, res) => {
-
-  const randomIndex = Math.floor(Math.random() * db.length);
+  const randomIndex = Math.floor(Math.random() * db.testimonials.length);
   const randomTestimonial = db.testimonials[randomIndex];
   res.json(randomTestimonial);
-
 });
+
+router.route('/testimonials/:id').get((req, res) => {
+  const testimonialId = req.params.id;
+
+  const testimonial = db.testimonials.find(item => {
+    return item.id === testimonialId || item.id === parseInt(testimonialId);
+  });
+
+  if (testimonial) {
+    res.json(testimonial);
+  } else {
+    res.status(404).json({ error: 'Testimonial not found.' });
+  }
+});
+
+
 router.route('/testimonials').post((req, res) => {
   const { author, text } = req.body;
 
@@ -41,11 +49,29 @@ router.route('/testimonials').post((req, res) => {
   }
 });
 
+router.route('/testimonials/:id').delete((req, res) => {
+  const { id } = req.params;
+
+  const index = db.testimonials.findIndex(item => {
+    return item.id === id || item.id === parseInt(id);
+  });
+
+
+  if (index !== -1) {
+    db.testimonials.splice(index, 1);
+    res.json({ message: 'OK' });
+  } else {
+    res.status(404).json({ error: 'Testimonial not found.' });
+  }
+});
+
 router.route('/testimonials/:id').put((req, res) => {
   const { id } = req.params;
   const { author, text } = req.body;
 
-  const index = db.testimonials.findIndex(item => item.id === parseInt(id));
+  const index = db.testimonials.findIndex(item => {
+    return item.id === id || item.id === parseInt(id);
+  });
 
   if (index !== -1 && author && text) {
     db.testimonials[index].text = text || db.testimonials[index].text;
@@ -56,17 +82,6 @@ router.route('/testimonials/:id').put((req, res) => {
   }
 });
     
-router.route('/testimonials/:id').delete((req, res) => {
-  const { id } = req.params;
-  const index = db.testimonials.findIndex(item => item.id === parseInt(id));
-
-  if (index !== -1) {
-    db.testimonials.splice(index, 1);
-    res.json({ message: 'OK' });
-  } else {
-    res.status(404).json({ error: 'Testimonial not found.' });
-  }
-});
 
 
 module.exports = router;

@@ -6,11 +6,24 @@ const db = require('./../db');
 router.route('/seats').get((req, res) => {
   res.json(db.seats);
 });
+
+router.route('/seats/random').get((req, res) => {
+  const randomIndex = Math.floor(Math.random() * db.seats.length);
+  const randomSeat = db.seats[randomIndex];
+  res.json(randomSeat);
+});
       
 router.route('/seats/:id').get((req, res) => {
-  const seatId = parseInt(req.params.id);
-  const seat = db.seats.find(item => item.id === seatId);
-  res.json(seat);
+  const seatId = req.params.id;
+  const seat = db.seats.find(item => {
+    return item.id === seatId|| item.id === parseInt(seatId)
+  });
+
+  if (seat) {
+    res.json(seat);
+  } else {
+    res.status(404).json({ error: 'Seat not found.' });
+  }
 });
   
 router.route('/seats').post((req, res) => {
@@ -35,13 +48,15 @@ router.route('/seats').post((req, res) => {
   
 router.route('/seats/:id').delete((req, res) => {
   const { id } = req.params;
-  const index = db.seats.findIndex(item => item.id === parseInt(id));
+  const index = db.seats.findIndex(item => {
+    return item.id === id || item.id === parseInt(id)
+  });
 
   if (index !== -1) {
     db.seats.splice(index, 1);
     res.json({ message: 'OK' });
   } else {
-    res.status(404).json({ error: 'Testimonial not found.' });
+    res.status(404).json({ error: 'Seat not found.' });
   }
 });
   
@@ -49,7 +64,9 @@ router.route('/seats/:id').put((req, res) => {
   const { id } = req.params;
   const { day, seat, client, email } = req.body;
 
-  const index = db.seats.findIndex(item => item.id === parseInt(id));
+  const index = db.seats.findIndex(item => {
+    return item.id === id || item.id === parseInt(id)
+  });
 
   if (index !== -1 && day && seat && client && email) {
     
@@ -65,7 +82,7 @@ router.route('/seats/:id').put((req, res) => {
 
     res.json({ message: 'OK' });
   } else {
-    res.status(404).json({ error: 'Testimonial not found or missing data.' });
+    res.status(404).json({ error: 'Seat not found or missing data.' });
   }
 });
 

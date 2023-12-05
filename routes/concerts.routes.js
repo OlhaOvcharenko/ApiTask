@@ -6,13 +6,26 @@ const db = require('./../db');
 router.route('/concerts').get((req, res) => {
   res.json(db.concerts);
 });
+
+router.route('/concerts/random').get((req, res) => {
+  const randomIndex = Math.floor(Math.random() * db.concerts.length);
+  const randomConcert = db.concerts[randomIndex];
+  res.json(randomConcert);
+});
     
 router.route('/concerts/:id').get((req, res) => {
-  const concertId = parseInt(req.params.id);
-  const concert = db.concerts.find(item => item.id === concertId);
-  res.json(concert);
+  const concertId = req.params.id;
+  const concert = db.concerts.find(item => {
+    return item.id === concertId|| item.id === parseInt(concertId)
+  });
+  if (concert) {
+    res.json(concert);
+  } else {
+    res.status(404).json({ error: 'Concert not found.' });
+  }
   
 });
+
   
 router.route('/concerts').post((req, res) => {
 
@@ -40,11 +53,13 @@ router.route('/concerts/:id').put((req, res) => {
   const { id } = req.params;
   const { performer, genre, price, day, image } = req.body;
 
-  const index = db.concerts.findIndex(item => item.id === parseInt(id));
+  const index = db.concerts.findIndex(item => {
+    return item.id === id || item.id === parseInt(id);
+  });
 
-  if (index !== -1 && performer && genre && price && day && image) {
+  if (index !== -1 && (performer || genre || price || day || image)) {
     const updatedConcert = {
-      ...db.concerts[index], 
+      ...db.concerts[index],
       performer: performer || db.concerts[index].performer,
       genre: genre || db.concerts[index].genre,
       price: price || db.concerts[index].price,
@@ -56,19 +71,22 @@ router.route('/concerts/:id').put((req, res) => {
 
     res.json({ message: 'OK' });
   } else {
-    res.status(404).json({ error: 'Data is not found.' });
+    res.status(404).json({ error: 'Concert not found' });
   }
 });
       
 router.route('/concerts/:id').delete((req, res) => {
   const { id } = req.params;
-  const index = db.concerts.findIndex(item => item.id === parseInt(id));
+
+  const index = db.concerts.findIndex(item => {
+    return item.id === id || item.id === parseInt(id);
+  });
 
   if (index !== -1) {
     db.concerts.splice(index, 1);
     res.json({ message: 'OK' });
   } else {
-    res.status(404).json({ error: ' Concert not found.' });
+    res.status(404).json({ error: 'Concert not found.' });
   }
 });
 

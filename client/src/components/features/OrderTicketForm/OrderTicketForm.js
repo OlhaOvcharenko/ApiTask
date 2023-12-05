@@ -38,6 +38,9 @@ const OrderTicketForm = () => {
     e.preventDefault();
 
     if(order.client && order.email && order.day && order.seat) {
+      
+      // need to loadSeatsRequest and method await: przed wywołaniem addSeatRequest. Dzięki temu zmusimy JSa, by poczekał do momentu, aż request addSeatRequest się wykonal
+      // i dopiero wtedy się urochomi loadSeatRequest
       dispatch(addSeatRequest(order));
       setOrder({
         client: '',
