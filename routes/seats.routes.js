@@ -29,21 +29,30 @@ router.route('/seats/:id').get((req, res) => {
 router.route('/seats').post((req, res) => {
   const { day, seat, client, email} = req.body;
 
-  if (day && seat && client && email) {
-    const newSeat = {
-      id: uuidv4(), 
-      day, 
-      seat,
-      client,
-      email
-    };
+  if (db.seats.some(takenSeat => takenSeat.day.toString() === day && 
+    takenSeat.seat.toString() === seat)){
+    
+    res.status(409).json({ error: 'The slot is already taken...' });
 
-    db.seats.push(newSeat);
-
-    res.status(201).json({ message: 'OK' });
   } else {
-    res.status(400).json({ error: 'All fields are required' });
+    
+    if (day && seat && client && email) {
+      const newSeat = {
+        id: uuidv4(), 
+        day, 
+        seat,
+        client,
+        email
+      };
+
+      db.seats.push(newSeat);
+
+      res.status(201).json({ message: 'OK' });
+    } else {
+      res.status(400).json({ error: 'All fields are required' });
+    }
   }
+
 });
   
 router.route('/seats/:id').delete((req, res) => {
