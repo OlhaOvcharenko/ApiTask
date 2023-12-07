@@ -1,7 +1,7 @@
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, Progress } from 'reactstrap';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSeatRequest, getRequests } from '../../../redux/seatsRedux';
+import { addSeatRequest, getRequests, loadSeatsRequest } from '../../../redux/seatsRedux';
 
 import './OrderTicketForm.scss';
 import SeatChooser from './../SeatChooser/SeatChooser';
@@ -38,21 +38,33 @@ const OrderTicketForm = () => {
     e.preventDefault();
 
     if(order.client && order.email && order.day && order.seat) {
-      
-      // need to loadSeatsRequest and method await: przed wywołaniem addSeatRequest. Dzięki temu zmusimy JSa, by poczekał do momentu, aż request addSeatRequest się wykonal
-      // i dopiero wtedy się urochomi loadSeatRequest
-      dispatch(addSeatRequest(order));
-      setOrder({
-        client: '',
-        email: '',
-        day: 1,
-        seat: '',
-      });
-      setIsError(false);
+
+      try {
+
+        // Wait for addSeatRequest to complete
+        await dispatch(addSeatRequest(order));
+
+        dispatch(loadSeatsRequest());
+
+        setOrder({
+          client: '',
+          email: '',
+          day: 1,
+          seat: '',
+        });
+        setIsError(false);
+
+      } catch (error) {
+
+        console.error('Error during addSeatRequest or loadSeatsRequest:', error);
+        setIsError(true);
+      }
+
     } else {
       setIsError(true);
     }
-  }
+  };
+
 
   return (
     <Form className="order-ticket-form" onSubmit={submitForm}>
