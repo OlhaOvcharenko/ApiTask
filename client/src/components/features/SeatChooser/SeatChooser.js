@@ -11,16 +11,17 @@ import { io } from 'socket.io-client';
 
 const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   const [socket, setSocket] = useState();
+  const [allSeats, setAllSeats] = useState(50);
   const seats = useSelector(getSeats);
   const requests = useSelector(getRequests);
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     const socket = io(process.env.NODE_ENV === 'production' ? '' : 'ws://localhost:8000', { transports: ['websocket'] });
     dispatch(loadSeatsRequest());
     setSocket(socket);
     socket.on('seatsUpdated', seatsUpdated => dispatch(loadSeats(seatsUpdated)));
-
     return () => {
       if (socket) {
         socket.disconnect();
@@ -32,6 +33,10 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   const isTaken = (seatId) => {
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
   }
+
+  const amountOfBookedSeats = seats.length;
+  const amountOfFreeSeats = allSeats - amountOfBookedSeats;
+  console.log(amountOfFreeSeats);
 
   const prepareSeat = (seatId) => {
     if(seatId === chosenSeat) return <Button key={seatId} className="seats__seat" color="primary">{seatId}</Button>;
@@ -47,6 +52,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
         <small id="pickHelpTwo" className="form-text text-muted ms-2"><Button outline color="primary" /> – it's empty</small>
       </div>
       { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].success) && <div className="seats">{[...Array(50)].map((x, i) => prepareSeat(i+1) )}</div>}
+      <p>Free seats: {amountOfFreeSeats}/{allSeats}</p>
       { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].pending) && <Progress animated color="primary" value={50} /> }
       { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].error) && <Alert color="warning">Couldn't load seats...</Alert> }
     </div>
