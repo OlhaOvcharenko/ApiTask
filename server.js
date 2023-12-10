@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 
 
 // Używaj różnych ścieżek dla różnych tras
-app.use('/api', testimonialsRoutes); 
+app.use('/api', testimonialRoutes); 
 app.use('/api', concertsRoutes); 
 app.use('/api', seatsRoutes); 
 
