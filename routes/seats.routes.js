@@ -29,6 +29,7 @@ router.route('/seats/:id').get((req, res) => {
 router.route('/seats').post((req, res) => {
   const { day, seat, client, email} = req.body;
 
+
   if (db.seats.some(takenSeat => takenSeat.day.toString() === day && 
     takenSeat.seat.toString() === seat)){
     
@@ -46,6 +47,8 @@ router.route('/seats').post((req, res) => {
       };
 
       db.seats.push(newSeat);
+
+      req.io.emit('seatsUpdated', db.seats);
 
       res.status(201).json({ message: 'OK' });
     } else {
