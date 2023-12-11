@@ -31,18 +31,27 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   }, [dispatch]);
 
   const isTaken = (seatId) => {
-    return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
+    return seats.some(item => (item.seat === seatId && item.day === chosenDay));
   }
 
-  const amountOfBookedSeats = seats.length;
+  const choosenSeatsPerDay = seats.filter(item => (item.day == chosenDay));
+  console.log(choosenSeatsPerDay, 'seats perday')
+  const amountOfBookedSeats = choosenSeatsPerDay.length;
   const amountOfFreeSeats = allSeats - amountOfBookedSeats;
   console.log(amountOfFreeSeats);
 
+
   const prepareSeat = (seatId) => {
-    if(seatId === chosenSeat) return <Button key={seatId} className="seats__seat" color="primary">{seatId}</Button>;
-    else if(isTaken(seatId)) return <Button key={seatId} className="seats__seat" disabled color="secondary">{seatId}</Button>;
-    else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
+    if(seatId === chosenSeat) 
+    return <Button key={seatId} className="seats__seat" color="primary">{seatId}</Button>;
+    else if(isTaken(seatId)) 
+    return <Button key={seatId} className="seats__seat" disabled color="secondary">{seatId}</Button>;
+    else 
+    return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
+     
   }
+
+
 
   return (
     <div>
