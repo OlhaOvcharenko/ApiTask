@@ -34,7 +34,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
     return seats.some(item => (item.seat === seatId && item.day === chosenDay));
   }
 
-  const choosenSeatsPerDay = seats.filter(item => (item.day == chosenDay));
+  const choosenSeatsPerDay = seats.filter(item => (item.day ==+ chosenDay));
   console.log(choosenSeatsPerDay, 'seats perday')
   const amountOfBookedSeats = choosenSeatsPerDay.length;
   const amountOfFreeSeats = allSeats - amountOfBookedSeats;
