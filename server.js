@@ -30,11 +30,11 @@ app.use((req, res, next) => {
   });
 
 const testimonialsRoutes = require('./routes/testimonials.routes')
-//const concertsRoutes = require('./routes/concerts.routes');
+const concertsRoutes = require('./routes/concerts.routes');
 const seatsRoutes = require('./routes/seats.routes');
 
 app.use('/api', testimonialsRoutes);
-//app.use('/api', concertsRoutes);
+app.use('/api', concertsRoutes);
 app.use('/api', seatsRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/build')));
