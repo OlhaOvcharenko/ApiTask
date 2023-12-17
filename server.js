@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/NewWaveDB', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://ovcharenkoolga2014:Soul1998@cluster0.jwymdrz.mongodb.net/NewWaveDB?retryWrites=true&w=majority');
 const db = mongoose.connection;
 
 db.once('open', () => {
