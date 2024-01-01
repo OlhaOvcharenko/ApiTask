@@ -19,33 +19,36 @@ describe('GET /api/concerts', () => {
       { _id: '5d9f1159f81ce8d1ef2bee48', performer:'Rebekah Parker', genre:'R&B',
         price: 35, day: 1, image: '/img/uploads/1fsd324fsdg.jpg' });
 
-    await testConcertTwo.save();
-    
+    await testConcertTwo.save();  
+  });     
+  it('/ should return concerts by performer', async () => {
+    const res = await request(server).get('/api/concerts/performer/John Doe');
+    expect(res.status).to.be.equal(200);
+    expect(res.body).to.be.an('array');
+    expect(res.body.length).to.be.equal(1);
   });
-        
-      it('/ should return concerts by performer', async () => {
-        const res = await request(server).get('/api/concerts/performer/John Doe');
-        expect(res.status).to.be.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be.equal(1);
-      });
-      it('/ should return concerts by genre', async () => {
-        const res = await request(server).get('/api/concerts/genre/R&B');
-        expect(res.status).to.be.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be.equal(1);
-      });
-      /*it('/ should return concerts by prices', async () => {
-        const res = await request(server).get('/api/price/15/40');
-        expect(res.status).to.be.equal(200);
-        expect(res.body).to.be.an('array');
-        expect(res.body).to.be.equal(2);
-      });*/
-    
-    
-      after(async () => {
-        await Concert.deleteMany();
-      });
-    
+  it('/ should return concerts by genre', async () => {
+    const res = await request(server).get('/api/concerts/genre/R&B');
+    expect(res.status).to.be.equal(200);
+    expect(res.body).to.be.an('array');
+    expect(res.body.length).to.be.equal(1);
+  });
+  it('/ should return concerts by day', async () => {
+    const res = await request(server).get(`/api/concerts/day/1`);
+    expect(res.status).to.be.equal(200);
+    expect(res.body).to.be.an('array');
+    expect(res.body.length).to.be.equal(2);
+  });
+  it('/ should return concerts by prices', async () => {
+    const res = await request(server).get(`/api/concerts/price/15/30`);
+    expect(res.status).to.be.equal(200);
+    expect(res.body).to.be.an('array');
+    expect(res.body.length).to.be.equal(1);
+  });
+  
+  after(async () => {
+    await Concert.deleteMany();
+  });
+
 });
 

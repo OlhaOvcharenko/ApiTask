@@ -23,8 +23,8 @@ db.once('open', () => {
 });
 db.on('error', err => console.log('Error ' + err));
 
-const server = app.listen('8080', () => {
-  console.log('Server is running on port: 8080');
+const server = app.listen('8000', () => {
+  console.log('Server is running on port: 8000');
 });
 
 const io = socket(server);
