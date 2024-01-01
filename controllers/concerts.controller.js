@@ -96,7 +96,7 @@ exports.getByPerformer = async (req, res) => {
     if (!concertsByPerformer.length === 0) {
       res.status(404).json({ error: 'Concers are not found' });
     } else {
-      res.json({ concerts: concertsByPerformer });
+      res.json(concertsByPerformer);
     }
 
   } catch (error) {
@@ -112,7 +112,7 @@ exports.getByGenre = async (req, res) => {
     if (concertsByGenre.length === 0) {
       res.status(404).json({message: 'Not found..'});
     } else {
-      res.json({concertsByGenre});
+      res.json(concertsByGenre);
     }
 
   } catch (error) {
@@ -134,7 +134,7 @@ exports.getByPrices = async (req, res) => {
     if (!concertsByPrices || concertsByPrices.length === 0) {
       res.status(404).json({ message: 'No concerts found.' });
     } else {
-      res.json({ concertsByPrices });
+      res.json(concertsByPrices);
     }
 
   } catch (error) {
@@ -150,7 +150,7 @@ exports.getByDay = async (req, res) => {
     if (!concertsByDay&&concertsByDay.length === 0) {
       res.status(404).json({ message: 'No concerts found for the specified day.' });
     } else {
-      res.json({ concertsByDay });
+      res.json(concertsByDay);
     }
 
   } catch (error) {

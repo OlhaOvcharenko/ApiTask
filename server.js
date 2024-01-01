@@ -6,19 +6,30 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://ovcharenkoolga2014:Soul1998@cluster0.jwymdrz.mongodb.net/NewWaveDB?retryWrites=true&w=majority');
+const uri = 'mongodb+srv://ovcharenkoolga2014:Soul1998@cluster0.jwymdrz.mongodb.net/NewWaveDB?retryWrites=true&w=majority';
+
+const NODE_ENV = process.env.NODE_ENV;
+let dbUri = '';
+
+if(NODE_ENV === 'production') dbUri = uri;
+else if(NODE_ENV === 'test') dbUri = 'mongodb://0.0.0.0:27017/NewWaveDB';
+else dbUri = 'mongodb://0.0.0.0:27017/NewWaveDB';
+
+mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
+
 
 db.once('open', () => {
   console.log('Connected to the database');
 });
 db.on('error', err => console.log('Error ' + err));
 
-const server = app.listen(process.env.PORT || 8000, () => {
+const server = app.listen('8000', () => {
   console.log('Server is running on port: 8000');
 });
 
 const io = socket(server);
+
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -50,3 +61,7 @@ io.on('connection', socket => {
 app.use((req, res) => {
     res.status(404).json({ message: 'Not found...' });
 });
+
+
+
+module.exports = server;
