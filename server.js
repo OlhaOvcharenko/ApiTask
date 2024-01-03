@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-const uri = 'mongodb+srv://ovcharenkoolga2014:Soul1998@cluster0.jwymdrz.mongodb.net/NewWaveDB?retryWrites=true&w=majority';
+const uri = `mongodb+srv://ovcharenkoolga2014:${process.env.DB_PASS}@cluster0.jwymdrz.mongodb.net/NewWaveDB?retryWrites=true&w=majority`;
 
 const NODE_ENV = process.env.NODE_ENV;
 let dbUri = '';
