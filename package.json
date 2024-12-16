@@ -16,7 +16,7 @@
     "helmet": "3.21.1",
     "mocha": "6.2.1",
     "mongo-sanitize": "1.0.1",
-    "mongoose": "^8.0.3",
+    "mongoose": "^8.8.2",
     "nodemon": "^3.0.2",
     "onchange": "^7.1.0",
     "snyk": "1.1064.0",
